@@ -21,13 +21,13 @@ const userSchema = mongoose.Schema({
     password: {
         required: true,
         type: String,
-        validate: {
-            validator: (value) => {
-                const re = /^[a-zA-Z]\w{8,15}$/;
-                return value.match(re);
-            },
-            message: 'Please enter a valid password',
-        },
+        // validate: {
+        //     validator: (value) => {
+        //         const re = /^[a-zA-Z]\w{8,15}$/;
+        //         return value.match(re);
+        //     },
+        //     message: 'Please enter a valid password',
+        // },
     },
     address: {
         type: String,
