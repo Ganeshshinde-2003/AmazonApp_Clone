@@ -4,7 +4,6 @@ import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/contants/error_handling.dart';
 import 'package:amazon_clone/contants/globlal_varible.dart';
 import 'package:amazon_clone/contants/utils.dart';
-import 'package:amazon_clone/features/home/screens/home_screen.dart';
 import 'package:amazon_clone/models/user_model.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
