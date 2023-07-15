@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/contants/error_handling.dart';
 import 'package:amazon_clone/contants/globlal_varible.dart';
 import 'package:amazon_clone/contants/utils.dart';
@@ -79,10 +80,11 @@ class AuthService {
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("x-auth-tokem", jsonDecode(res.body)['token']);
+          // ignore: use_build_context_synchronously
           Provider.of<UserProvider>(context, listen: false).serUser(res.body);
           Navigator.pushNamedAndRemoveUntil(
             context,
-            HomeScreen.routeName,
+            BottomBar.routeName,
             (route) => false,
           );
         },
