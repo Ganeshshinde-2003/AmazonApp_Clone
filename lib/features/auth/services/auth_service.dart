@@ -118,6 +118,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': token,
         });
+        // ignore: use_build_context_synchronously
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.serUser(userRes.body);
       }
