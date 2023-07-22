@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../admin/screens/admin_screen.dart';
+
 class AuthService {
   // sign up user
   void signUpUser({
@@ -81,11 +83,16 @@ class AuthService {
           await prefs.setString("x-auth-tokem", jsonDecode(res.body)['token']);
           // ignore: use_build_context_synchronously
           Provider.of<UserProvider>(context, listen: false).serUser(res.body);
+          // ignore: use_build_context_synchronously
           Navigator.pushNamedAndRemoveUntil(
-            context,
-            BottomBar.routeName,
-            (route) => false,
-          );
+              context,
+              // BottomBar.routeName,
+              // (route) => false,
+              // ignore: use_build_context_synchronously
+              Provider.of<UserProvider>(context).user.type == 'user'
+                  ? BottomBar.routeName
+                  : AdminScren.routeName,
+              (route) => false);
         },
       );
     } catch (e) {
