@@ -80,7 +80,7 @@ class AuthService {
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString("x-auth-tokem", jsonDecode(res.body)['token']);
+          await prefs.setString("x-auth-token", jsonDecode(res.body)['token']);
           // ignore: use_build_context_synchronously
           Provider.of<UserProvider>(context, listen: false).serUser(res.body);
           // ignore: use_build_context_synchronously

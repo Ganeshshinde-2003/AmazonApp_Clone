@@ -31,6 +31,7 @@ class _MyAppState extends State<MyApp> {
     authService.getUserData(context: context);
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Amazon Clone',

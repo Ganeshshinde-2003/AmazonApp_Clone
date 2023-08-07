@@ -43,7 +43,7 @@ class _DealOfTheDayState extends State<DealOfTheDay> {
         Container(
           alignment: Alignment.topLeft,
           padding: const EdgeInsets.only(left: 15, top: 5, right: 40),
-          child: Text(
+          child: const Text(
             "Ganesh",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

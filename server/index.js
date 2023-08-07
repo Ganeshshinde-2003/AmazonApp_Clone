@@ -10,7 +10,7 @@ const authRouter = require("./routes/auth")
 //INIT
 const PORT = 3000;
 const app = express();
-const DB = process.env.DB 
+const DB = process.env.DB;
 
 //MIDDLEWARE
 app.use(bodyParser.json()); // Add this line 
