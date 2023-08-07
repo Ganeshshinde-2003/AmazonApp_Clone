@@ -1,5 +1,6 @@
-import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
 import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/contants/error_handling.dart';
 import 'package:amazon_clone/contants/globlal_varible.dart';
@@ -10,11 +11,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../admin/screens/admin_screen.dart';
 
 class AuthService {
-  // sign up user
   void signUpUser({
     required BuildContext context,
     required String email,
@@ -40,7 +39,6 @@ class AuthService {
         },
       );
 
-      // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
         context: context,
@@ -55,9 +53,8 @@ class AuthService {
       showSnackBar(context, e.toString());
     }
   }
-  // signin
 
-  void signInUser({
+  Future<void> signInUser({
     required BuildContext context,
     required String email,
     required String password,
@@ -74,25 +71,25 @@ class AuthService {
         },
       );
 
-      // ignore: use_build_context_synchronously
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () async {
+          final responseBody = jsonDecode(res.body);
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString("x-auth-token", jsonDecode(res.body)['token']);
-          // ignore: use_build_context_synchronously
-          Provider.of<UserProvider>(context, listen: false).serUser(res.body);
-          // ignore: use_build_context_synchronously
+
+          // Set user token and data in provider
+          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+
+          await prefs.setString("x-auth-token", responseBody['token']);
+
+          var userType = responseBody['type'];
+
           Navigator.pushNamedAndRemoveUntil(
-              context,
-              // BottomBar.routeName,
-              // (route) => false,
-              // ignore: use_build_context_synchronously
-              Provider.of<UserProvider>(context).user.type == 'user'
-                  ? BottomBar.routeName
-                  : AdminScren.routeName,
-              (route) => false);
+            context,
+            userType == 'user' ? BottomBar.routeName : AdminScren.routeName,
+            (route) => false,
+          );
         },
       );
     } catch (e) {
@@ -100,21 +97,20 @@ class AuthService {
     }
   }
 
-  void getUserData({
-    required BuildContext context,
-  }) async {
+  void getUserData(BuildContext context) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString("x-auth-token");
+      String? token = prefs.getString('x-auth-token');
 
       if (token == null) {
-        prefs.setString("x-auth-token", "");
+        prefs.setString('x-auth-token', "");
+        return;
       }
 
       var tokenRes = await http
           .post(Uri.parse("$uri/tokenInValid"), headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': token!,
+        'x-auth-token': token,
       });
 
       var response = jsonDecode(tokenRes.body);
@@ -125,9 +121,9 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': token,
         });
-        // ignore: use_build_context_synchronously
+
         var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.serUser(userRes.body);
+        userProvider.setUser(userRes.body);
       }
     } catch (e) {
       showSnackBar(context, e.toString());
