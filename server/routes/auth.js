@@ -35,28 +35,34 @@ authRouter.post("/api/signup", async (req, res) => {
     }
 });
 
-authRouter.post("/api/signin", async (req,res) => {
+// Sign In Route
+// Exercise
+authRouter.post("/api/signin", async (req, res) => {
     try {
-        const {email, password} = req.body;
-
-        const user = await  User.findOne({email});
-        if(!user) {
-            return res.status(400).json({error: "User with this email not exist"});
-        }
-        const isMatch = await bcryptjs.compare(password, user.password);
-        if(!isMatch) {
-            return res.status(400).json({msg: "Incorrect password"});
-        }
-        const token = jwt.sign({id: user._id}, "passwordKey");
-        res.json({token, ...user._doc});
-    } catch (err) {
-        res.status(500).json({error: err.message});
+      const { email, password } = req.body;
+  
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ msg: "User with this email does not exist!" });
+      }
+  
+      const isMatch = await bcryptjs.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ msg: "Incorrect password." });
+      }
+  
+      const token = jwt.sign({ id: user._id }, "passwordKey");
+      res.json({ token, ...user._doc });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
-});
+  });
 
 authRouter.post("/tokenInValid", async (req,res) => {
     try {
-        const token = req.header("x-auth-token");
+        const token = req.header('x-auth-token');
         if(!token) {
             return res.json(false);
         }
@@ -75,6 +81,6 @@ authRouter.post("/tokenInValid", async (req,res) => {
 authRouter.get("/", auth , async(req,res) => {
     const user = await User.findByid(req.user);
     res.json({...user._doc, token: req.token});
-})
+});
 
 module.exports = authRouter;
